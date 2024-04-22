@@ -6,9 +6,13 @@ from fastapi.security import APIKeyHeader
 
 coursemanager = CourseManager()
 usermanager = UserManager()
-usermanager.create_a_user("John", "pwd", "studnet")
+usermanager.create_a_user("John", "pwd", "student")
 usermanager.create_a_user("Alice", "pwd", "teacher")
 usermanager.create_a_user("Jimmy", "pwd", "admin")
+
+coursemanager.create_a_course("Cosc381", "Fall", [1])
+coursemanager.create_a_course("Cosc480", "Winter", [1])
+coursemanager.create_a_course("Mth 120", "Summer", [1])
 
 app = FastAPI()
 
@@ -29,14 +33,15 @@ def create_a_course(coursecode: str,
 
     return course_id
 
+
 @app.put("/courses/{courseid}/students")
 def import_students(courseid: int,
                     student_id_list: List[int]) -> None:
     course = coursemanager.find_a_course(courseid)
     student_list = usermanager.find_users(student_id_list)
-    course.import_students(student_list)
+    
     
     print(course.course_id)
-    print(course.student_list)
+    print(course.student_list is not None)
     
     return None
